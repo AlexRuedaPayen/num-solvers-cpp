@@ -1,0 +1,130 @@
+{
+ "LaplaceSparse" : {
+ "LUSolve" : {
+ "Time" : 0.000285
+ },
+ "MinRes" : {
+ "Time" : 0.529508
+ }
+ },
+ "./input/matrix07.txt" : {
+ "LUSolve" : {
+ "Time" : 0.000648
+ },
+ "MinRes" : {
+ "Time" : 0.033304
+ }
+ },
+ "./input/matrix08.txt" : {
+ "LUSolve" : {
+ "Time" : 0.651123
+ },
+ "MinRes" : {
+ "Time" : 142.313
+ }
+ },
+ "./input/matrix09.txt" : {
+ "LUSolve" : {
+ "Time" : 0.002552
+ },
+ "MinRes" : {
+ "Time" : 0.193611
+ }
+ },
+ "./input/matrix1.txt" : {
+ "LUSolve" : {
+ "Time" : 0.004959
+ },
+ "MinRes" : {
+ "Time" : 0.002377
+ }
+ },
+ "./input/matrix10.txt" : {
+ "LUSolve" : {
+ "Time" : 0.005828
+ },
+ "MinRes" : {
+ "Time" : 0.41565
+ }
+ },
+ "./input/matrix11.txt" : {
+ "LUSolve" : {
+ "Time" : 0.017318
+ },
+ "MinRes" : {
+ "Time" : 1.61184
+ }
+ },
+ "./input/matrix12.txt" : {
+ "LUSolve" : {
+ "Time" : 0.028716
+ },
+ "MinRes" : {
+ "Time" : 4.51281
+ }
+ },
+ "./input/matrix13.txt" : {
+ "LUSolve" : {
+ "Time" : 0.063566
+ },
+ "MinRes" : {
+ "Time" : 10.352
+ }
+ },
+ "./input/matrix14.txt" : {
+ "LUSolve" : {
+ "Time" : 0.141523
+ },
+ "MinRes" : {
+ "Time" : 26.7434
+ }
+ },
+ "./input/matrix15.txt" : {
+ "LUSolve" : {
+ "Time" : 0.287677
+ },
+ "MinRes" : {
+ "Time" : 70.3517
+ }
+ },
+ "./input/matrix2.txt" : {
+ "LUSolve" : {
+ "Time" : 0.004934
+ },
+ "MinRes" : {
+ "Time" : 0.001791
+ }
+ },
+ "./input/matrix3.txt" : {
+ "LUSolve" : {
+ "Time" : 0.004927
+ },
+ "MinRes" : {
+ "Time" : 0.001793
+ }
+ },
+ "./input/matrix4.txt" : {
+ "LUSolve" : {
+ "Time" : 0.040393
+ },
+ "MinRes" : {
+ "Time" : 0.014864
+ }
+ },
+ "./input/matrix5.txt" : {
+ "LUSolve" : {
+ "Time" : 0.046677
+ },
+ "MinRes" : {
+ "Time" : 0.015292
+ }
+ },
+ "./input/matrix6.txt" : {
+ "LUSolve" : {
+ "Time" : 0.040717
+ },
+ "MinRes" : {
+ "Time" : 0.017012
+ }
+ }
+}

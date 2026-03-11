@@ -1,0 +1,101 @@
+Vous trouverez ci-joint un programme dont la visée est la comparaison de l'efficacité du préconditionneur de Schwartz sur 
+l'algorithme du gradient conjugué.
+Nous choisirons des préconditionnements de Schwartz aléatoirement, manquant de théorie.
+
+Pour realiser les inversions nécessaires sur des matrices de petites tailles, nous calculons leurs décompositions LU puis
+nous résolvons simplement les systèmes triangulaires associés.
+Nous stockons les matrices sous trois formats : Dense (classe DenseMatrix), Creuse-Dictionnaires (classe SparseMatrix) et
+CSR (classe CSR).
+Cependant, seul le format dense sera utilisé sur les matrices de grandes dimensions présentes en exemple.
+Sera utilisé une matrice Laplacienne de taille 100 au format SparseMatrix.
+
+Les codes des classes Creuse-Dictionnaire et CSR ont été rédigés dans le but d'optimiser leurs utilisations dans les cas
+correspondants.  
+
+STRUCRURE
+Nous avons crée une classe virtuelle "SolveMatrix”, mère de toutes les classes modélisant les trois différents formats matriciels, contenant les solveurs itératifs : leurs codes étant identiques, cela nousépargnera des lignes de codes. 
+Les matrices sous forme de blocs seront elles définis dans des templates de classes prenant un des trois formats matriciels en argument.
+Nous avons définis entre tous les formats matriciels des liens d’amitié mutuels.
+
+CLASSE SolveMatrix
+
+Il s’agit d’une classe virtuelle (ou abstraite) dont le but est de regrouper un ensemble de méthodes utilisable sur ses filles, au code identique.
+Cette classe comprend aussi des méthodes virtuelles pures, utilisées dans le code des méthodes communes aux trois formats :
+Leur code sera écrit dans toutes les classes héritant de SolveMatrix.
+Cela nous permettra d’utiliser ces méthodes avec le code de l’objet d’appel mais sous
+la classe mère SolveMatrix.
+
+Méthodes solveuses cg et pcg : elles seront étiquetées en privé, pour en éviter un mauvais usage.
+Nous ne pourrons les utiliser que par la méthode Question
+
+La méthode solveuse MinRes sera, elle, public et sera utilisée dans la classe Block.
+
+Les codes des méthodes des classes filles issus de la méthode virtuelle pure pcg se trouvent dans le fichier “block_code.hpp” afin de pouvoir utiliser des fonctions définis
+dans la classe template BlockMatrix<Matrix> défini ci-dessous.
+
+Attention : bien que cela ne nous gêne pas dans la réalisation du projet (peu de mémoire étant impliqué), nous aurions eu idéalement besoin d’un destructeur virtuel pour la classe SolveMatrix. Cependant, ne maîtrisant pas totalement ce genre d’opération, nous avons décidé de laisser la faute.
+
+FORMATS MATRICIELS
+
+Nous avons défini trois formats matriciels :
+Pour les trois formats, les dimensions de la matrice étant fixés avant la définition.
+Nous avons ajouté un mutateur privé (pour éviter de rendre la décomposition LU défini ci-dessous obsolète).
+
+
+- Format DenseMatrix : le plus intuitif et basique.
+Le format DenseMatrix où les coefficients matriciels sont stockées dans un tableau statique.
+
+Pour les matrices creuses :
+
+- Le format “SparseMatrix”, dans lequel les coefficients non nuls sont précisés et sont stockés dans un dictionnaire associant à une paire (ligne, colonne) une valeur.
+- Le format “CSR” dans lequel les coefficients non nuls sont stockés en paire avec le numero de la colonne associée dans un des tableaux correspondant à sa ligne. (Attention ce format n’est intéressant
+que si la matrice ne possède sur chaque ligne qu’un faible nombre de coefficients non nuls).
+
+Nous avons pris la liberté d’écrire un champ sous la forme d’un ou deux pointeur(s), vers une matrice du même format, stockant les coefficients de la décomposition LU.
+Ces champs sont étiquetés privé pour respecter la justesse de la decomposition LU, sont initialisés par la méthode LU1() étiquetée elle aussi privée (ils prennent la valeur de pointeur
+Nul par default) , afin d’éviter de refaire une décomposition LU lorsque celle-ci a déjà été effectuée.
+Nous supposerons que la matrice sur laquelle est utilisée la méthode décomposition LU n’admet pas de coefficients non nuls (on pourrait généraliser au cas de matrice dont les sous déterminants sont tous non nuls mais il faudrait créer une classe permutation, travail assez laborieux ne répondant pas à l’énoncé).
+Ces champs présentent l’avantage de pouvoir être ré-utilisable autant de fois que désiré dans notre code, une fois initialisés.
+
+Attention la décomposition LU de la matrice CSR ne fonctionne pas : le problème semble être lié à l’utilisation de la méthode erase sur une liste crée en allouant de la mémoire…
+Nous laissons néanmoins le code comme piste éventuelle.
+
+CLASSES BLOCK ET BLOCK MATRIX
+
+Ces classes sont des templates prenant pour argument des classes contenant les méthodes utilisés (MvProd par exemple). C’est le cas des trois formats matriciels présentant la même liste de méthodes.
+Nous avons donc rédigé leurs méthodes en conséquence.
+Nous avons utilisé la méthode LU défini dans SolveMatrix dans le cadre de la résolution d’un système linéaire dans le code de la méthode MvProdInv.
+
+La convergence de la méthode MinRes ne dépendant pas de la dimension mais des valeurs propres de la matrice, il semble raisonnable de l’utiliser en grande dimensions et d’utiliser LUSolve en petite dimension.
+
+Nous avons choisis d’utiliser des matrices blocs de petites dimension pour préconditionner la matrice, le préconditionnement étant relativement efficace et le temps de calcul étant moindre pour l’inversion, ayant stocké les résultats de la décomposition LU.
+
+FONCTION MAIN
+
+Nous avons crée un constructeur prenant en entrée une entrée vers un fichier (file input istream).
+Nous lirons tous les fichiers dont le nom est listé dans le fichier “MatrixFiles”.
+En ajoutant (ou retirant) des matrices dans le dossier input, l’appel de ExecuteThisFile modifia le fichier.
+
+Puis nous appelons la méthode Question sur toutes ces matrices, qui comparera les méthodes du gradient conjuguée non préconditionné et précondtionné .
+Nous appellerons la méthode Question2 comparant les performances des solveurs LU et MinRes (temps d’exécution pour obtenir une erreur de l’ordre 10^-6) par la même occasion (résultat écrit dans le fichier ./output/LUvsMinRes.json).
+
+FICHIER EXECUTETHISFILE
+
+Le fichier ExecuteThisFile demande à l’utilisateur si il souhaite recalculer les sorties JSON de la fonction main. (Cela nous permet de rajouter des fichiers-matrices dans le dossier input, d’en supprimer certaines) (saisir Y ou N).
+Il effectuera la compilation des fichiers (via l’utilisation d’un make/Makefile) puis exécutera ./bin/main avant de tracer les graphes via matplotlib, et d’en enregistrer les résultats dans le dossier Output.
+
+Pour obtenir les résultats de la dernière question de l’exercice 2, nous exécuterons ce fichier.
+
+Le temps de calcul est de l’ordre de 5 minutes (le traitement des matrices 8,14 et 15 étant particulièrement long).
+La raison étant que nous avons décidé d’afficher le temps de calcul des algorithmes MinRes et LU pour chacune des matrices, algorithmes lent.
+Pour accélérer l’exécution de ExecuteThisFile, nous pourrons mettre en commentaire l’appel de Question2 dans main.cpp.
+
+TESTS
+
+La plupart des test ont été menés en étiquetant toutes les méthodes de publics, en écrivant des “std::cout<<ok;”, à chaque erreur de segmentation ou lorsque que la durée d’un algorithme semble absurde, et en affichant les valeurs lorsque celles-ci nous paraissent, similairement, absurdes. Nous avons aussi utilisé le logiciel de debuggage gdb.
+
+CHOIX DU PRECONDITIONNEUR
+
+Nous avons testé différents paramètres sur les listes (choisis aléatoirement).
+Un nombre important de petites listes semble le meilleur choix.
+Afin de minimiser le nombre de vecteurs et la taille des matrices, nous avons choisis de prendre l=log_2(n) et r=l-1, bien que cela ne repose sur aucune justification mathématique légitime.

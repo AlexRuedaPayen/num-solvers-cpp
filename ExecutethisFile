@@ -1,0 +1,19 @@
+#!/bin/bash
+
+read -p "Do you want to compute the output files [Y/N]?	" answer
+case $answer in	
+Y|y)	
+	rm MatrixFiles
+	touch MatrixFiles
+	for file in ./input/* 
+	do 
+		if [ -f "$file" ] 
+		then 
+			echo "$file" >> MatrixFiles
+		fi 
+	done
+	rm ./output/CGvsPCG.json ./output/LUvsMR.json
+	make
+	./bin/main;;
+esac
+python plot.py
