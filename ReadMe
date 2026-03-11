@@ -1,4 +1,4 @@
-** Projet sous supervision de Xavier Claeys, Bertrand Thierry faisant parti de l'UE 4M053 de l'Université Paris VI... realisé conjointement avec Nathan Cohen**
+** Projet sous supervision de Pr. Xavier Claeys, Pr. Bertrand Thierry faisant parti de l'UE 4M053 de l'Université Paris VI... realisé conjointement avec Nathan Cohen**
 
 Vous trouverez ci-joint un programme dont la visée est la comparaison de l'efficacité du préconditionneur de Schwartz sur 
 l'algorithme du gradient conjugué.
